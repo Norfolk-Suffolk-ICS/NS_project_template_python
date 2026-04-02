@@ -1,6 +1,6 @@
 $VenvPath = Join-Path $PSScriptRoot "..\.venv"
 $ActivationPath = "$VenvPath\Scripts\Activate.ps1"
-$SneePackagesFile = Join-Path $PSScriptRoot "snee-packages.txt"
+$NSPackagesFile = Join-Path $PSScriptRoot "ns-packages.txt"
 $RequirementsPath = Join-Path $PSScriptRoot "requirements.txt"
 
 
@@ -19,12 +19,12 @@ else {
 Write-Output "Activating venv"
 & $ActivationPath
 
-# Check if the 'snee-packages.txt' file exists
-if (Test-Path $SneePackagesFile) {
-    Write-Output "$SneePackagesFile found, Installing packages..."
-    pip install -r $SneePackagesFile
+# Check if the 'ns-packages.txt' file exists
+if (Test-Path $NSPackagesFile) {
+    Write-Output "$NSPackagesFile found, Installing packages..."
+    pip install -r $NSPackagesFile
 } else {
-    Write-Output "$SneePackagesFile not found! Please ensure it is located in the project root if you require these packages."
+    Write-Output "$NSPackagesFile not found! Please ensure it is located in the project root if you require these packages."
 }
 
 # ask the user if they wish to install requirements.txt
