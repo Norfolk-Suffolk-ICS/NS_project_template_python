@@ -1,1 +1,2 @@
 git+https://github.com/Norfolk-Suffolk-ICS/NS_utils.git
+git+https://github.com/Norfolk-Suffolk-ICS/ph_inequalities_statistical_comparison.git

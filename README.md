@@ -1,80 +1,85 @@
-# Project introduction 
+Project introduction
 
-This is a clean, minimal template repository for starting new Python projects in SCC's remote desktop, with sensible defaults for structure, environment setup and packaging. This template has a suggested project structure, it has 3 main directories:
+This is a clean, minimal template repository for starting new Python projects in SCC's remote desktop, with sensible defaults for structure, environment setup and packaging. This template has a suggested project structure with 4 main directories:
 
-- **Data**: This is where all your data for analysis will/should be stored.
-- **Notebooks**: This is where all your Python/R notebooks for analysis should be stored.
-- **Setup**: This folder holds all the files related to python setup and snowflake integration.
+Data: This is where all your data for analysis will/should be stored.
+Notebooks: This is where all your Python/R notebooks for analysis should be stored.
+SQL: This is where your SQL query files should be stored.
+Setup: This folder holds all the files related to Python setup and Snowflake integration.
 
-> ⚠️ Note - Please do no rename or move (change location) of the 'Setup' folder and any files within the folder. 
+⚠️ Note - Please do not rename or move the 'Setup' folder or any files within it.
+
 <br>
+Requirements
+Python 3.12 or newer. The setup script checks this and stops with a message if your version is older.
+Steps to set up the Snowflake extension in VS Code
 
-## Step to set up snowflake extension on VScode 
+(To be done only once, the very first time you set up VS Code and Snowflake)
 
-**(To be done only once, the very first time you setup VScode and Snowflake)**
+Click Extensions on the left-most bar of your VS Code screen.
+Search for 'snowflake' and install it.
+Once installed, paste in your account identifier/URL (you can find this in your account details on Snowflake) and click continue.
+Select 'Single-sign-on' as the Auth Method.
+Type in the username/email address you use to log in to Snowflake, and you are good to go.
+You should see options like Databases and Applications on your bottom-left panel, similar to what you see on Snowflake in the browser.
+Steps for Python setup
 
-1. Go to extensions from left most bar on your VScode screen and click on Extensions
-2. Search for 'snowflake' and install.
-3. Once installed, paste in your accoutn identified/URL (You can find this in your account details on SNOWFLAKE) and click continue.
-4. Select 'Single-sign-on' as Auth Method.
-5. Type in your username/email address used to login into snowflake and you are good to do.
-6. You should see option like Databases and applications on your left bottom panel, similar to what you see on snowflake from browser.
+(To be done each time you create a new repository using this template)
 
+In VS Code, on the left-hand tab, click "Explorer". Go to the Setup directory and open the file connections.toml.example
+Rename the file to connections.toml. This ensures your personal details (email) will not be pushed to GitHub.
+Replace both the user fields with your datahub/Snowflake email address and save.
+Now go back to the Setup directory and open the file setup-env.ps1
+Click the play button at the top right of the PowerShell file. This runs the script.
+Keep an eye on your terminal window:
+If a .venv already exists, it asks whether to delete and rebuild it. Type 'y' for a clean install (recommended if you've had package errors), or 'n' to keep it.
+When it finishes, select the .venv Python as the kernel in your notebook and start on your project.
+Virtual environment
 
-## Steps for python setup
+It is always recommended to use a virtual environment in any analytical product. This allows another person to replicate, review, contribute to, and run your project using the same underlying code packages.
 
-**(To be done each time you create a new repository using this template)**
+Setup directory explained
 
-1. In Vscode, on the left-hand tab, click "Explorer". Go to ```Setup``` directory and open the file ```connections.toml.example```
-2. Please rename the file to ```connections.toml``` , this will ensure your personal details (email) will not be pushed to github.
-3. Replace both the ```user``` fields with your datahub/snowflake email address and save.
-4. Now again go to ```Setup``` directory and open the file ```setup-env.ps1```
-5. At the top right of the powershell file click the play button, this will execute this powershell script.
-6. Wait and keep an eye on your terminal window to check status, type in 'y' if it promts to download packages from ```requirements.txt``` file.
-7. Once it stop running your python setup is finished and you can start on your project.
+This directory contains all the files you need for Python setup and integration with Snowflake.
 
+setup-env.ps1 is the core setup file. It:
+Checks you have Python 3.12 or newer.
+Checks for a virtual environment at .\.venv
+If one is found, it offers to delete and rebuild it.
+If not found, one is created.
+Upgrades pip.
+Installs the packages in requirements.txt and ns-packages.txt together, so their versions are compatible.
+Refreshes the NS packages so you always get their latest version from GitHub.
+Checks for any remaining version conflicts and activates the environment.
+connections.toml: the information in this file is used to connect to Snowflake and use datasets stored in Snowflake directly in VS Code.
 
-## Virtual environment
+⚠️ Note - Please update the 'user' field in the file with your username/email.
 
-Is is always recommended to use a virtual environment in any analytical product.
-This allows another person to replicate, review, contribute to, and run your project using the same underlying code packages.
+NS Packages
 
+The setup script installs these internal packages from GitHub:
 
-## Setup directory explained
+NS_utils is an internal Python library designed for reuse by analysts within the Norfolk and Suffolk (NS) Intelligence Function. It holds NS-IF plotting styles and utility functions (Snowflake connection, notebook export, etc.). For more info read the README here --> NS utils
+ph_inequalities_statistical_comparison produces automated statistical comparison across inequalities and groups, using either a crude or standardised approach. For more info see --> ph_inequalities_statistical_comparison
 
-This directory contains all the files you need for python setup and integration with Snowflake.
+To add another internal package, add its git+https://... link as a new line in Setup/ns-packages.txt and re-run setup-env.ps1.
 
-1. It contains a powershell script file i.e. 'setup-env.ps1', which is core set-up file, it:
-   - Checks for virtual environment at ```.\.venv```
-      - If one is found. it is activated.
-      - If not found, one is created, then activated.
-   - Checks for ```ns-packages.txt``` and attempts installation. See below for details.
-   - Checks for ```requirements.txt``` and prompts the user to install the packages within, if it is present.
+Explaining the files
+.gitignore --> A plain text file that tells Git which files or directories to ignore, meaning they won't be tracked, committed or pushed.
+README.md --> Readme file for the repository (not related to Python setup). Its contents are displayed on the GitHub repository page.
+connections.toml --> toml file to establish a connection with Snowflake.
+requirements.txt --> Lists the general Python packages your project depends on. No version numbers are set, so new projects get the latest compatible versions.
+ns-packages.txt --> Lists the internal NS packages to install from GitHub.
+setup-env.ps1 --> The main setup file (see "Setup directory explained" above).
+example_analysis.ipynb --> Example of connecting to Snowflake, loading data from SQL or a file, and using the NS plotting themes.
+example_inequalities.ipynb --> Example of using ph_inequalities_statistical_comparison with Snowflake data to compare proportions across inequality groups. Uses SQL/query.sql.
+query.sql --> Example SQL query used by example_inequalities.ipynb.
+Keeping a record of exact versions
 
+Because requirements.txt has no version numbers, it's a good idea to save a snapshot once your project works:
 
-2. It also contains 'connection.toml' file : This information in this file is used to integrate snowflake and use dataset stored in snowflake directly in VS code.
+pip freeze > Setup/requirements-lock.txt
 
-> ⚠️ Note - Please update the 'user' field in the file with your username/email.
-
-
-## NS Packages
-
-By default, this installs NS_utils package when you run the setup-env.ps1 file :
-
-- NS_utils is an Internal Python Library (Python package distribution) designed for reuse by analysts within the Norfolk and Suffolk (NS) Intelligence Function. For more info read the README.md here --> [NS utils](https://github.com/Norfolk-Suffolk-ICS/NS_utils/blob/main/README.md)
-
-
-## Explaining the files
-
-1. ```.gitignore```        --> This is a plain text file that tells Git which files or directories to ignore, meaning they wont be tracked, committed or pushed
-2. ```README.md```         --> Readme file for the repository (Not related to python setup). The contents of this file will be displayd on GITEA repository page
-3. ``` connection.toml```  --> toml file to establish connection with snowflake.
-4. ```requirements.txt```  --> This file is used to list and download the basic Python packages your project would depends on.
-5. ```setup-env.ps1```     --> This file is the main setup file. It has 3 important steps
-   - Check for Virtual environment: if found then skip else create new VE (.venv) and activate it.
-   - Check for any repositories you want to load from ns-packages.txt file (by default it has NS-IF stylings and python functions, you can add on your)
-   - Download all the Python packages from requirements.txt file
-6. ```ns-packages.txt``` --> This file lists all the repositories/packages we want to load from Gitea.
-7. ```example_analysis.ipynb``` --> This is an example fiel on how to establish connection with snowflake and load data from sql, load data from a file and NS plotting themes.
+If an update ever breaks something, pip install -r Setup/requirements-lock.txt puts you back to exactly those versions.
 
 <hr>
